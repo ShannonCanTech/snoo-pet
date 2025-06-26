@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { navigateTo } from '@devvit/client';
+import boltBadge from '../../assets/bolt-badge.svg';
 import { SnooSprite } from './components/SnooSprite';
 import { StatsPanel } from './components/StatsPanel';
 import { ActionButtons } from './components/ActionButtons';
@@ -232,7 +234,7 @@ export const Game: React.FC = () => {
   }, [stats.health, stats.hunger, stats.cleanliness, stats.energy, alive, stats.age, showMessage]);
 
   return (
-    <div className="min-h-screen bg-gray-800 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-800 flex flex-col items-center justify-center p-4 relative">
       {showBanner && <Banner />}
       
       <div className="giga-pet-device">
@@ -285,6 +287,16 @@ export const Game: React.FC = () => {
 
       <div className="text-center mt-4 text-xs text-gray-500 pixel-font">
         {alive ? 'KEEP YOUR SNOO ALIVE!' : 'GAME OVER - RESTART TO CONTINUE'}
+      </div>
+      <div
+        className="absolute top-2 right-2 z-50 cursor-pointer"
+        onClick={() => navigateTo('https://bolt.new')}
+      >
+        <img
+          src={boltBadge}
+          alt="Built with Bolt.new badge"
+          className="w-16 h-16 rounded-full shadow-lg"
+        />
       </div>
     </div>
   );
