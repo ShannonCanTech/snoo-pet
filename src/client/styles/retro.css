@@ -1,0 +1,745 @@
+/* Giga Pet Retro Styling - Classic Pixel Art Style */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Custom pixel font */
+.pixel-font {
+  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Main device container - Made wider and better proportioned */
+.giga-pet-device {
+  background: #f4e4bc;
+  border: 4px solid #8b4513;
+  border-radius: 0;
+  box-shadow: 
+    4px 4px 0px #654321,
+    8px 8px 0px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  position: relative;
+  width: 480px; /* Made wider */
+  max-width: 90vw;
+  margin: 0 auto;
+  image-rendering: pixelated;
+}
+
+/* Brand label area */
+.brand-label {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #8b4513;
+  color: #f4e4bc;
+  padding: 4px 12px;
+  border: 2px solid #654321;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+/* LCD Screen - Made wider and shorter */
+.lcd-screen {
+  background: #f4e4bc;
+  border: 4px solid #8b4513;
+  padding: 20px;
+  margin: 25px 0 20px 0;
+  position: relative;
+  width: 100%;
+  height: 280px; /* Fixed height instead of min-height */
+  overflow: hidden;
+  image-rendering: pixelated;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Remove LCD effects for pixel art style */
+.lcd-screen::before,
+.lcd-screen::after {
+  display: none;
+}
+
+/* LCD Text styling */
+.lcd-text {
+  color: #8b4513;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  text-shadow: none;
+}
+
+/* Pet display area */
+.pet-display {
+  text-align: center;
+  margin: 20px 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.pet-state-text {
+  margin-top: 12px;
+  font-size: 10px;
+}
+
+/* Pixel art Snoo container */
+.pixel-snoo-container {
+  width: 120px;
+  height: 100px;
+  margin: 0 auto;
+  position: relative;
+  image-rendering: pixelated;
+}
+
+/* Pixel art Snoo representation */
+.pixel-snoo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  position: relative;
+  image-rendering: pixelated;
+}
+
+/* Snoo parts */
+.snoo-antenna {
+  position: absolute;
+  top: 5px;
+  left: 38px;
+  width: 3px;
+  height: 15px;
+  background: #8b4513;
+  border-radius: 1px;
+}
+
+.snoo-antenna-ball {
+  position: absolute;
+  top: 2px;
+  left: 35px;
+  width: 9px;
+  height: 9px;
+  background: #f4e4bc;
+  border: 2px solid #8b4513;
+  border-radius: 50%;
+}
+
+.snoo-head {
+  position: absolute;
+  top: 20px;
+  left: 15px;
+  width: 50px;
+  height: 40px;
+  background: #f4e4bc;
+  border: 3px solid #8b4513;
+  border-radius: 25px 25px 20px 20px;
+}
+
+.snoo-eye {
+  position: absolute;
+  top: 12px;
+  width: 8px;
+  height: 8px;
+  background: #ff4500;
+  border-radius: 50%;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b4513;
+  font-weight: bold;
+}
+
+.snoo-eye.left {
+  left: 12px;
+}
+
+.snoo-eye.right {
+  right: 12px;
+}
+
+.snoo-eye.dead {
+  background: #8b4513;
+  color: #f4e4bc;
+  font-size: 10px;
+}
+
+.snoo-eye.sleeping {
+  background: #8b4513;
+  height: 3px;
+  border-radius: 0;
+}
+
+.snoo-mouth {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b4513;
+}
+
+.snoo-mouth.happy {
+  width: 20px;
+  font-size: 10px;
+}
+
+.snoo-mouth.sick {
+  width: 16px;
+  color: #654321;
+}
+
+.snoo-mouth.eating {
+  animation: chew 0.5s infinite;
+  font-size: 6px;
+}
+
+.snoo-body {
+  position: absolute;
+  bottom: 5px;
+  left: 25px;
+  width: 30px;
+  height: 20px;
+  background: #f4e4bc;
+  border: 3px solid #8b4513;
+  border-radius: 15px;
+}
+
+.snoo-arm {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  background: #f4e4bc;
+  border: 2px solid #8b4513;
+  border-radius: 4px;
+  top: 35px;
+}
+
+.snoo-arm.left {
+  left: 8px;
+}
+
+.snoo-arm.right {
+  right: 8px;
+}
+
+.snoo-arm.playing {
+  animation: wave 0.6s infinite alternate;
+}
+
+/* Animation Effects */
+
+/* Eating Animation */
+.eating-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.food-particle {
+  position: absolute;
+  font-size: 12px;
+  animation: float-up 2s ease-out infinite;
+}
+
+.food-particle.particle-1 {
+  top: 30px;
+  left: 45px;
+  animation-delay: 0s;
+}
+
+.food-particle.particle-2 {
+  top: 35px;
+  left: 35px;
+  animation-delay: 0.3s;
+}
+
+.food-particle.particle-3 {
+  top: 35px;
+  left: 55px;
+  animation-delay: 0.6s;
+}
+
+/* Cleaning Animation */
+.cleaning-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  font-size: 10px;
+  color: #87ceeb;
+  animation: bubble-float 1.5s ease-in-out infinite;
+}
+
+.bubble.bubble-1 {
+  top: 20px;
+  left: 20px;
+  animation-delay: 0s;
+}
+
+.bubble.bubble-2 {
+  top: 30px;
+  left: 70px;
+  animation-delay: 0.2s;
+}
+
+.bubble.bubble-3 {
+  top: 50px;
+  left: 30px;
+  animation-delay: 0.4s;
+}
+
+.bubble.bubble-4 {
+  top: 40px;
+  left: 60px;
+  animation-delay: 0.6s;
+}
+
+.bubble.bubble-5 {
+  top: 60px;
+  left: 50px;
+  animation-delay: 0.8s;
+}
+
+/* Talking Animation */
+.talking-effects {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.speech-bubble {
+  background: #f4e4bc;
+  border: 2px solid #8b4513;
+  border-radius: 8px;
+  padding: 4px 8px;
+  position: relative;
+  animation: talk-bounce 0.5s ease-in-out infinite alternate;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #8b4513;
+}
+
+.speech-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #8b4513;
+}
+
+/* Sleeping Animation */
+.sleeping-effects {
+  position: absolute;
+  top: -10px;
+  left: 60px;
+  pointer-events: none;
+}
+
+.sleep-z {
+  position: absolute;
+  font-family: 'Press Start 2P', monospace;
+  color: #8b4513;
+  animation: sleep-float 2s ease-in-out infinite;
+}
+
+.sleep-z.z-1 {
+  font-size: 14px;
+  top: 0px;
+  left: 0px;
+  animation-delay: 0s;
+}
+
+.sleep-z.z-2 {
+  font-size: 12px;
+  top: -8px;
+  left: 8px;
+  animation-delay: 0.5s;
+}
+
+.sleep-z.z-3 {
+  font-size: 10px;
+  top: -16px;
+  left: 16px;
+  animation-delay: 1s;
+}
+
+/* Playing Animation */
+.playing-effects {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.game-controller {
+  font-size: 16px;
+  animation: controller-bounce 0.8s ease-in-out infinite;
+}
+
+.play-sparkle {
+  position: absolute;
+  font-size: 12px;
+  color: #ffd700;
+  animation: sparkle 1s ease-in-out infinite;
+}
+
+.play-sparkle.sparkle-1 {
+  top: -5px;
+  left: -15px;
+  animation-delay: 0s;
+}
+
+.play-sparkle.sparkle-2 {
+  top: -5px;
+  right: -15px;
+  animation-delay: 0.5s;
+}
+
+/* Keyframe Animations */
+@keyframes chew {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.8); }
+}
+
+@keyframes wave {
+  0% { transform: rotate(-10deg); }
+  100% { transform: rotate(10deg); }
+}
+
+@keyframes float-up {
+  0% { 
+    opacity: 1; 
+    transform: translateY(0px) scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-20px) scale(0.5); 
+  }
+}
+
+@keyframes bubble-float {
+  0% { 
+    opacity: 0.8; 
+    transform: translateY(0px) scale(0.5); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(-10px) scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-20px) scale(0.3); 
+  }
+}
+
+@keyframes talk-bounce {
+  0% { transform: translateX(-50%) scale(1); }
+  100% { transform: translateX(-50%) scale(1.1); }
+}
+
+@keyframes sleep-float {
+  0% { 
+    opacity: 0; 
+    transform: translateY(0px) scale(0.8); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(-15px) scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-30px) scale(0.6); 
+  }
+}
+
+@keyframes controller-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0px); }
+  50% { transform: translateX(-50%) translateY(-5px); }
+}
+
+@keyframes sparkle {
+  0%, 100% { 
+    opacity: 0; 
+    transform: scale(0.5); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.2); 
+  }
+}
+
+/* Stats display - Made more compact and organized */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #8b4513;
+  margin-top: 16px;
+  padding: 0 8px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.stat-bar {
+  display: none; /* Hide bars for pixel art style */
+}
+
+.stat-fill {
+  display: none;
+}
+
+/* Action buttons container */
+.action-buttons-container {
+  margin-top: 20px;
+}
+
+/* Action buttons grid - Made more compact */
+.action-menu {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.action-menu.six-buttons {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.action-menu.restart-mode {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  max-width: 200px;
+  margin: 20px auto 0;
+}
+
+.action-item {
+  background: #f4e4bc;
+  border: 3px solid #8b4513;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.1s ease; /* Faster transition */
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #8b4513;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+.action-item:hover:not(.disabled) {
+  background: #e6d4a8;
+  transform: translateY(-1px);
+}
+
+.action-item:active:not(.disabled) {
+  background: #d4c49c;
+  border-color: #654321;
+  transform: translateY(1px);
+}
+
+.action-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.action-item.restart-button {
+  background: #e6d4a8;
+  border-color: #654321;
+  font-size: 9px;
+  min-height: 50px;
+}
+
+.action-item.restart-button:hover:not(.disabled) {
+  background: #d4c49c;
+}
+
+/* Action icons */
+.action-icon {
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Remove physical buttons completely */
+.physical-buttons {
+  display: none;
+}
+
+/* Message display */
+.lcd-message {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  background: rgba(244, 228, 188, 0.95);
+  border: 2px solid #8b4513;
+  padding: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  text-align: center;
+  color: #8b4513;
+  animation: none;
+  z-index: 10;
+}
+
+/* Age display */
+.age-display {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #8b4513;
+  opacity: 1;
+}
+
+/* Death screen overlay */
+.death-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(139, 69, 19, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f4e4bc;
+  font-family: 'Press Start 2P', monospace;
+  animation: none;
+  z-index: 5;
+}
+
+/* Remove scan lines for pixel art */
+.scan-lines {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 520px) {
+  .giga-pet-device {
+    width: 95vw;
+    padding: 16px;
+  }
+  
+  .lcd-screen {
+    height: 240px;
+    padding: 16px;
+  }
+  
+  .pixel-snoo-container {
+    width: 100px;
+    height: 80px;
+  }
+  
+  .pixel-snoo {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .action-item {
+    min-height: 45px;
+    padding: 10px 6px;
+    font-size: 8px;
+  }
+  
+  .action-icon {
+    font-size: 12px;
+  }
+  
+  .lcd-text {
+    font-size: 10px;
+  }
+  
+  .stats-grid {
+    font-size: 8px;
+    gap: 4px 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .giga-pet-device {
+    width: 98vw;
+    padding: 12px;
+  }
+  
+  .lcd-screen {
+    height: 220px;
+    padding: 12px;
+  }
+  
+  .action-menu {
+    gap: 6px;
+  }
+  
+  .action-item {
+    min-height: 40px;
+    padding: 8px 4px;
+    font-size: 7px;
+  }
+  
+  .action-icon {
+    font-size: 10px;
+  }
+}
+
+/* Pixel art style borders and shadows */
+.pixel-border {
+  border: 2px solid #8b4513;
+  box-shadow: 2px 2px 0px #654321;
+}
+
+/* Pixel art style text */
+.pixel-text {
+  font-family: 'Press Start 2P', monospace;
+  color: #8b4513;
+  text-rendering: optimizeSpeed;
+  image-rendering: pixelated;
+}
