@@ -1,4 +1,5 @@
 import { Devvit, Post } from '@devvit/public-api';
+import { navigateTo } from '@devvit/client';
 
 // Side effect import to bundle the server. The /index is required for server splitting.
 import '../server/index';
@@ -17,6 +18,28 @@ defineConfig({
   //   preview: <Preview />,
   // },
 });
+
+export const BoltBadgeOverlay: Devvit.BlockComponent = () => (
+  <hstack alignment="end" padding="medium" width={'100%'} height={'30%'}>
+    <image
+      url="bolt-badge.svg"
+      resizeMode="fit"
+      description="Built with Bolt.new badge"
+      imageHeight={80}
+      imageWidth={80}
+      onPress={() => navigateTo('https://bolt.new')}
+    />
+  </hstack>
+);
+
+export const BoltGame: Devvit.BlockComponent = () => (
+  <zstack width={'100%'} height={'100%'} alignment="center middle">
+    <webview url="index.html" />
+    <BoltBadgeOverlay />
+  </zstack>
+);
+
+Devvit.addDefaultPost(BoltGame);
 
 export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Loading...' }) => {
   return (
