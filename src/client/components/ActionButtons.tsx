@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActionType } from '../../shared/types/pet';
+import { PixelIcon } from './PixelIcons';
 
 interface ActionButtonsProps {
   onAction: (action: ActionType) => void;
@@ -14,12 +15,12 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   alive, 
   disabled 
 }) => {
-  const actions: Array<{ action: ActionType; label: string; icon: string }> = [
-    { action: 'feed', label: 'Feed', icon: '🍔' },
-    { action: 'play', label: 'Play', icon: '🎮' },
-    { action: 'clean', label: 'Clean', icon: '🧼' },
-    { action: 'talk', label: 'Talk', icon: '💬' },
-    { action: 'sleep', label: 'Sleep', icon: '🛏️' },
+  const actions: Array<{ action: ActionType; label: string; iconType: any }> = [
+    { action: 'feed', label: 'Feed', iconType: 'feed' },
+    { action: 'play', label: 'Play', iconType: 'play' },
+    { action: 'clean', label: 'Clean', iconType: 'clean' },
+    { action: 'talk', label: 'Talk', iconType: 'talk' },
+    { action: 'sleep', label: 'Sleep', iconType: 'sleep' },
   ];
 
   const handleActionClick = (action: ActionType) => {
@@ -38,13 +39,15 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       <div className={`action-menu ${alive ? 'six-buttons' : 'restart-mode'}`}>
         {alive ? (
           <>
-            {actions.map(({ action, label, icon }) => (
+            {actions.map(({ action, label, iconType }) => (
               <div
                 key={action}
                 className={`action-item pixel-border ${disabled ? 'disabled' : ''}`}
                 onClick={() => handleActionClick(action)}
               >
-                <span className="action-icon">{icon}</span>
+                <span className="action-icon">
+                  <PixelIcon type={iconType} size={20} />
+                </span>
                 <span>{label}</span>
               </div>
             ))}
@@ -53,7 +56,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
               className={`action-item pixel-border restart-button ${disabled ? 'disabled' : ''}`}
               onClick={handleRestartClick}
             >
-              <span className="action-icon">🔄</span>
+              <span className="action-icon">
+                <PixelIcon type="restart" size={20} />
+              </span>
               <span>Restart</span>
             </div>
           </>
@@ -62,7 +67,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
             className={`action-item pixel-border restart-button ${disabled ? 'disabled' : ''}`}
             onClick={handleRestartClick}
           >
-            <span className="action-icon">🔄</span>
+            <span className="action-icon">
+              <PixelIcon type="restart" size={20} />
+            </span>
             <span>Restart</span>
           </div>
         )}

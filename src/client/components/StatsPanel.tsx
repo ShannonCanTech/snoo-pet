@@ -1,5 +1,6 @@
 import React from 'react';
 import { PetStats } from '../../shared/types/pet';
+import { PixelIcon } from './PixelIcons';
 
 interface StatsPanelProps {
   stats: PetStats;
@@ -10,40 +11,26 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ stats }) => {
     return Math.round(value).toString();
   };
 
-  const getStatIcon = (statName: string) => {
-    const icons = {
-      health: '♥',
-      hunger: '🍔',
-      cleanliness: '🧼',
-      energy: '⚡',
-      happiness: '😊'
-    };
-    return icons[statName as keyof typeof icons] || '●';
-  };
+  const statItems = [
+    { key: 'health', label: 'Health', value: stats.health, iconType: 'health' as const },
+    { key: 'hunger', label: 'Hunger', value: stats.hunger, iconType: 'hunger' as const },
+    { key: 'cleanliness', label: 'Cleanliness', value: stats.cleanliness, iconType: 'cleanliness' as const },
+    { key: 'energy', label: 'Energy', value: stats.energy, iconType: 'energy' as const },
+    { key: 'happiness', label: 'Happiness', value: stats.happiness, iconType: 'happiness' as const },
+  ];
 
   return (
     <div className="stats-grid pixel-text">
-      <div className="stat-item">
-        <span>♥ Health: {formatStatValue(stats.health)}</span>
-      </div>
+      {statItems.map(({ key, label, value, iconType }) => (
+        <div key={key} className="stat-item">
+          <span className="stat-icon">
+            <PixelIcon type={iconType} size={12} />
+          </span>
+          <span className="stat-text">{label}: {formatStatValue(value)}</span>
+        </div>
+      ))}
 
-      <div className="stat-item">
-        <span>🍔 Hunger: {formatStatValue(stats.hunger)}</span>
-      </div>
-
-      <div className="stat-item">
-        <span>🧼 Cleanliness: {formatStatValue(stats.cleanliness)}</span>
-      </div>
-
-      <div className="stat-item">
-        <span>⚡ Energy: {formatStatValue(stats.energy)}</span>
-      </div>
-
-      <div className="stat-item">
-        <span>😊 Happiness: {formatStatValue(stats.happiness)}</span>
-      </div>
-
-      <div className="stat-item">
+      <div className="stat-item age-stat">
         <span>Age: {Math.round(stats.age)} min</span>
       </div>
     </div>

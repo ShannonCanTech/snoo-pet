@@ -6,17 +6,13 @@ import '../server/index';
 import { defineConfig } from '@devvit/server';
 
 defineConfig({
-  name: '[Bolt] Snoo Pet',
+  name: '[Bolt] Community Snoo Pet',
   entry: 'index.html',
   height: 'tall',
   menu: { enable: false },
-  // TODO: Cannot use without ability to pass in more metadata
-  // menu: {
-  //   enable: true,
-  //   label: 'New Snoo Pet Post',
-  //   postTitle: 'Snoo Pet',
-  //   preview: <Preview />,
-  // },
+  // Enable required features for multiplayer
+  redditAPI: true,
+  redis: true,
 });
 
 export const BoltBadgeOverlay: Devvit.BlockComponent = () => (
@@ -39,21 +35,31 @@ export const BoltGame: Devvit.BlockComponent = () => (
   </zstack>
 );
 
-export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Loading...' }) => {
+export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Community Snoo Pet - Keep it alive together!' }) => {
   return (
     <zstack width={'100%'} height={'100%'} alignment="center middle">
-      <vstack width={'100%'} height={'100%'} alignment="center middle">
-        {/* <image 
-          url="loading.gif"
-          description="Loading..."
-          height={'140px'}
-          width={'140px'}
-          imageHeight={'240px'}
-          imageWidth={'240px'}
-        /> */}
-        <spacer size="small" />
-        <text maxWidth={`80%`} size="large" weight="bold" alignment="center middle" wrap>
+      <vstack width={'100%'} height={'100%'} alignment="center middle" backgroundColor="#f4e4bc">
+        {/* Pixel art Snoo preview */}
+        <vstack alignment="center middle" backgroundColor="#8b4513" cornerRadius="small" padding="medium">
+          <text size="large" weight="bold" color="#f4e4bc">
+            🤖 COMMUNITY SNOO PET
+          </text>
+          <spacer size="small" />
+          <text size="medium" color="#f4e4bc">
+            A shared virtual pet experience
+          </text>
+          <spacer size="small" />
+          <text size="small" color="#e6d4a8">
+            Work together to keep Snoo alive!
+          </text>
+        </vstack>
+        <spacer size="medium" />
+        <text maxWidth={`80%`} size="medium" weight="bold" alignment="center middle" wrap color="#8b4513">
           {text}
+        </text>
+        <spacer size="small" />
+        <text size="small" color="#654321" alignment="center middle">
+          Click to start caring for your community pet!
         </text>
       </vstack>
     </zstack>
@@ -63,7 +69,7 @@ export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Load
 // TODO: Remove this when defineConfig allows webhooks before post creation
 Devvit.addMenuItem({
   // Please update as you work on your idea!
-  label: '[Bolt Snoo Pet]: New Post',
+  label: '[Bolt Community Snoo Pet]: New Post',
   location: 'subreddit',
   forUserType: 'moderator',
   onPress: async (_event, context) => {
@@ -74,12 +80,12 @@ Devvit.addMenuItem({
       const subreddit = await reddit.getCurrentSubreddit();
       post = await reddit.submitPost({
         // Title of the post. You'll want to update!
-        title: 'Snoo Pet',
+        title: 'Community Snoo Pet - Keep it alive together!',
         subredditName: subreddit.name,
         preview: <Preview />,
       });
       
-      ui.showToast({ text: 'Created post!' });
+      ui.showToast({ text: 'Created community pet post!' });
       ui.navigateTo(post.url);
     } catch (error) {
       if (post) {
