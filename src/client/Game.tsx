@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { navigateTo } from '@devvit/client';
-import boltBadge from '../../assets/bolt-badge.svg';
+import boltBadge from '../../assets/bolt-badge.png';
 import { SnooSprite } from './components/SnooSprite';
 import { StatsPanel } from './components/StatsPanel';
 import { ActionButtons } from './components/ActionButtons';
