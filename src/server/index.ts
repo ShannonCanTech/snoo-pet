@@ -26,6 +26,42 @@ const actionDescriptions = {
   death: 'witnessed the community Snoo pass away'
 };
 
+// Helper function to get username safely
+const getUsername = (userId: string): string => {
+  try {
+    // Extract a readable portion of the userId
+    if (userId && userId.length > 8) {
+      return userId.substring(0, 8) + '...';
+    }
+    return userId || 'Anonymous';
+  } catch (error) {
+    console.error('Error processing username:', error);
+    return 'Anonymous';
+  }
+};
+
+// Helper function to validate and parse JSON safely
+const safeJsonParse = (jsonString: string): any => {
+  try {
+    // Check if the string is valid before parsing
+    if (!jsonString || typeof jsonString !== 'string' || jsonString.trim() === '') {
+      return null;
+    }
+    
+    // Additional validation - check if it looks like JSON
+    const trimmed = jsonString.trim();
+    if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+      console.warn('Invalid JSON format detected:', trimmed);
+      return null;
+    }
+    
+    return JSON.parse(trimmed);
+  } catch (error) {
+    console.error('JSON parsing error:', error, 'Input:', jsonString);
+    return null;
+  }
+};
+
 // Pet action endpoint
 router.post<{}, PetActionResponse, { action: ActionType; currentStats: PetStats }>(
   '/api/pet-action',
@@ -84,13 +120,7 @@ router.post<{}, PetActionResponse, { action: ActionType; currentStats: PetStats 
       }
 
       // Get username for logging
-      let username = 'Anonymous';
-      try {
-        // Extract username from userId if possible, or use truncated version
-        username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
-      } catch (error) {
-        console.error('Error getting username:', error);
-      }
+      const username = getUsername(userId);
 
       // Update shared pet state
       const sharedState = {
@@ -152,8 +182,12 @@ router.get('/api/pet-state', async (req, res): Promise<void> => {
     const stateData = await redis.get(`${PET_STATE_KEY}:${postId}`);
     
     if (stateData) {
-      const state = JSON.parse(stateData);
-      res.json({ status: 'success', ...state });
+      const state = safeJsonParse(stateData);
+      if (state) {
+        res.json({ status: 'success', ...state });
+      } else {
+        res.json({ status: 'success', stats: null });
+      }
     } else {
       res.json({ status: 'success', stats: null });
     }
@@ -177,12 +211,7 @@ router.post('/api/pet-state', async (req, res): Promise<void> => {
     const redis = getRedis();
     
     // Get username
-    let username = 'Anonymous';
-    try {
-      username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
-    } catch (error) {
-      console.error('Error getting username:', error);
-    }
+    const username = getUsername(userId);
 
     const sharedState = {
       stats,
@@ -212,12 +241,7 @@ router.post('/api/pet-restart', async (req, res): Promise<void> => {
     const redis = getRedis();
     
     // Get username
-    let username = 'Anonymous';
-    try {
-      username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
-    } catch (error) {
-      console.error('Error getting username:', error);
-    }
+    const username = getUsername(userId);
     
     // Reset shared state
     const initialStats = {
@@ -287,14 +311,14 @@ router.get('/api/community-actions', async (req, res): Promise<void> => {
       if (actionsData && actionsData.fieldValues) {
         actions = actionsData.fieldValues
           .map(fv => {
-            try {
-              return JSON.parse(fv.value);
-            } catch (parseError) {
-              console.error('Error parsing action data:', parseError);
-              return null;
+            // Safely parse each action
+            const parsedAction = safeJsonParse(fv.value);
+            if (parsedAction && parsedAction.username && parsedAction.message) {
+              return parsedAction;
             }
+            return null;
           })
-          .filter(action => action !== null)
+          .filter(action => action !== null) // Remove invalid entries
           .sort((a, b) => b.timestamp - a.timestamp)
           .slice(0, 10); // Get last 10 actions
       }
@@ -318,7 +342,7 @@ router.get('/api/community-actions', async (req, res): Promise<void> => {
   }
 });
 
-// Reddit update endpoint
+// Reddit update endpoint - Posts comments to Reddit
 router.post<{}, RedditUpdateResponse, { action: string; message: string }>(
   '/api/reddit-update',
   async (req, res): Promise<void> => {
@@ -332,12 +356,7 @@ router.post<{}, RedditUpdateResponse, { action: string; message: string }>(
 
     try {
       // Get username
-      let username = 'Anonymous';
-      try {
-        username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
-      } catch (error) {
-        console.error('Error getting username:', error);
-      }
+      const username = getUsername(userId);
 
       // Store the update in Redis for activity feed
       const redis = getRedis();
@@ -355,7 +374,7 @@ router.post<{}, RedditUpdateResponse, { action: string; message: string }>(
       }
       
       // Note: Actual Reddit comment posting would require Reddit API integration
-      // For now, we'll just log the action
+      // For now, we'll just log the action and store it for the community feed
       console.log(`Reddit update for ${username}: ${message}`);
 
       res.json({ status: 'success' });

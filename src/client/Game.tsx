@@ -77,7 +77,6 @@ export const Game: React.FC = () => {
   const [disabled, setDisabled] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [birthTime] = useState(Date.now());
-  const [lastActionBy, setLastActionBy] = useState<string>('');
 
   useEffect(() => {
     const hostname = window.location.hostname;
@@ -95,9 +94,6 @@ export const Game: React.FC = () => {
             setStats(data.stats);
             updatePetState(data.stats);
             setAlive(data.alive !== false);
-            if (data.lastActionBy) {
-              setLastActionBy(data.lastActionBy);
-            }
           }
         }
       } catch (error) {
@@ -177,11 +173,11 @@ export const Game: React.FC = () => {
 
         // Send Reddit update for every action in multiplayer mode
         const messages = {
-          feed: `fed the community Snoo a delicious pixel-burger! 🍔`,
-          play: `played with the community Snoo and had a great time! 🎮`,
-          clean: `cleaned up the community Snoo's mess! 🧼`,
-          sleep: `tucked the community Snoo into bed for a nap! 😴`,
-          talk: `had a heart-to-heart conversation with the community Snoo! 💬`,
+          feed: `fed the community Snoo a delicious pixel-burger!`,
+          play: `played with the community Snoo and had a great time!`,
+          clean: `cleaned up the community Snoo's mess!`,
+          sleep: `tucked the community Snoo into bed for a nap!`,
+          talk: `had a heart-to-heart conversation with the community Snoo!`,
         };
         
         await sendRedditUpdate(action, messages[action]);
@@ -205,7 +201,7 @@ export const Game: React.FC = () => {
     
     if (!alive) {
       const ageInMinutes = Math.round((Date.now() - birthTime) / 60000);
-      await sendRedditUpdate('death', `Community Snoo lived ${ageInMinutes} minutes before going to r/snooheaven 💀`);
+      await sendRedditUpdate('death', `Community Snoo lived ${ageInMinutes} minutes before going to r/snooheaven`);
     }
 
     try {
@@ -222,10 +218,9 @@ export const Game: React.FC = () => {
       setAlive(true);
       setActionCount(0);
       setMessage('');
-      setLastActionBy('');
       showMessage('COMMUNITY SNOO REBORN!');
       
-      await sendRedditUpdate('restart', 'restarted the community Snoo! A new life begins! 🔄');
+      await sendRedditUpdate('restart', 'restarted the community Snoo! A new life begins!');
     } catch (error) {
       console.error('Restart failed:', error);
       showMessage('Restart failed. Please try again.');
@@ -333,13 +328,6 @@ export const Game: React.FC = () => {
             <div className="age-display lcd-text">
               {Math.round(stats.age)}MIN
             </div>
-
-            {/* Last Action Display */}
-            {lastActionBy && (
-              <div className="last-action lcd-text">
-                Last action by: {lastActionBy}
-              </div>
-            )}
 
             {/* Death Overlay */}
             {!alive && (
