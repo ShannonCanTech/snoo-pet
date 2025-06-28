@@ -38,6 +38,22 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({ className = '' }) 
     return () => clearInterval(interval);
   }, []);
 
+  const formatTimeAgo = (timestamp: number) => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / 60000);
+    
+    if (minutes < 1) return 'just now';
+    if (minutes === 1) return '1 min ago';
+    if (minutes < 60) return `${minutes} mins ago`;
+    
+    const hours = Math.floor(minutes / 60);
+    if (hours === 1) return '1 hour ago';
+    if (hours < 24) return `${hours} hours ago`;
+    
+    return 'yesterday';
+  };
+
   return (
     <div className={`community-feed ${className}`}>
       <div className="community-header pixel-text">
@@ -47,10 +63,11 @@ export const CommunityFeed: React.FC<CommunityFeedProps> = ({ className = '' }) 
       
       <div className="recent-actions">
         {recentActions.length > 0 ? (
-          recentActions.slice(0, 5).map((action) => (
+          recentActions.slice(0, 3).map((action) => (
             <div key={action.id} className="action-entry pixel-text">
               <div className="action-user">{action.username}</div>
               <div className="action-text">{action.message}</div>
+              <div className="action-time">{formatTimeAgo(action.timestamp)}</div>
             </div>
           ))
         ) : (

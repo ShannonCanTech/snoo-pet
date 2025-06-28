@@ -22,7 +22,7 @@ export const BoltBadgeOverlay: Devvit.BlockComponent = () => (
     alignment="end top" 
     padding="small" 
     width={'100%'} 
-    height={'15%'}
+    height={'20%'}
     position="absolute"
     top="0px"
     right="0px"
@@ -31,8 +31,8 @@ export const BoltBadgeOverlay: Devvit.BlockComponent = () => (
       url="bolt-badge.png"
       resizeMode="fit"
       description="Built with Bolt.new badge"
-      imageHeight={50}
-      imageWidth={50}
+      imageHeight={60}
+      imageWidth={60}
       onPress={() => navigateTo('https://bolt.new')}
     />
   </hstack>
@@ -69,15 +69,16 @@ export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Comm
         </text>
         <spacer size="small" />
         <text size="small" color="#654321" alignment="center middle">
-          Tap to start caring for your community pet!
+          Click to start caring for your community pet!
         </text>
       </vstack>
     </zstack>
   );
 };
 
-// Create the post with custom preview - this ensures the preview stays persistent
+// TODO: Remove this when defineConfig allows webhooks before post creation
 Devvit.addMenuItem({
+  // Please update as you work on your idea!
   label: '[Bolt Community Snoo Pet]: New Post',
   location: 'subreddit',
   forUserType: 'moderator',
@@ -88,9 +89,9 @@ Devvit.addMenuItem({
     try {
       const subreddit = await reddit.getCurrentSubreddit();
       post = await reddit.submitPost({
+        // Title of the post. You'll want to update!
         title: 'Community Snoo Pet - Keep it alive together!',
         subredditName: subreddit.name,
-        // Use the custom preview component directly
         preview: <Preview />,
       });
       
@@ -107,19 +108,6 @@ Devvit.addMenuItem({
       }
     }
   },
-});
-
-// Configure the main app to use the custom preview
-Devvit.configure({
-  redditAPI: true,
-  redis: true,
-});
-
-// Set the main component to use the game with persistent preview
-Devvit.addCustomPostType({
-  name: 'Community Snoo Pet',
-  height: 'tall',
-  render: BoltGame,
 });
 
 export default Devvit;
