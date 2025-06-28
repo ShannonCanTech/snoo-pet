@@ -15,6 +15,17 @@ const router = express.Router();
 const PET_STATE_KEY = 'community_pet_state';
 const COMMUNITY_ACTIONS_KEY = 'community_actions';
 
+// Action descriptions for Reddit comments
+const actionDescriptions = {
+  feed: 'fed the community Snoo with pixel food',
+  play: 'played games with the community Snoo',
+  clean: 'cleaned the community Snoo with pixel bubbles',
+  sleep: 'tucked the community Snoo into bed',
+  talk: 'had a conversation with the community Snoo',
+  restart: 'restarted the community Snoo for a new life',
+  death: 'witnessed the community Snoo pass away'
+};
+
 // Pet action endpoint
 router.post<{}, PetActionResponse, { action: ActionType; currentStats: PetStats }>(
   '/api/pet-action',
@@ -41,30 +52,30 @@ router.post<{}, PetActionResponse, { action: ActionType; currentStats: PetStats 
         case 'feed':
           newStats.hunger = Math.min(100, newStats.hunger + 25);
           newStats.happiness = Math.min(100, newStats.happiness + 5);
-          message = '🍔 Snoo enjoyed the meal!';
+          message = 'Snoo enjoyed the pixel meal!';
           break;
 
         case 'play':
           newStats.happiness = Math.min(100, newStats.happiness + 20);
           newStats.energy = Math.max(0, newStats.energy - 10);
-          message = '🎮 Snoo had fun playing!';
+          message = 'Snoo had fun playing games!';
           break;
 
         case 'clean':
           newStats.cleanliness = Math.min(100, newStats.cleanliness + 30);
           newStats.happiness = Math.min(100, newStats.happiness + 5);
-          message = '🧼 Snoo feels fresh and clean!';
+          message = 'Snoo feels fresh and clean!';
           break;
 
         case 'sleep':
           newStats.energy = Math.min(100, newStats.energy + 35);
           newStats.health = Math.min(100, newStats.health + 5);
-          message = '😴 Snoo had a refreshing nap!';
+          message = 'Snoo had a refreshing nap!';
           break;
 
         case 'talk':
           newStats.happiness = Math.min(100, newStats.happiness + 15);
-          message = '💬 Snoo loves chatting with you!';
+          message = 'Snoo loves chatting with you!';
           break;
 
         default:
@@ -72,27 +83,48 @@ router.post<{}, PetActionResponse, { action: ActionType; currentStats: PetStats 
           return;
       }
 
+      // Get username for logging
+      let username = 'Anonymous';
+      try {
+        // Extract username from userId if possible, or use truncated version
+        username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
+      } catch (error) {
+        console.error('Error getting username:', error);
+      }
+
       // Update shared pet state
       const sharedState = {
         stats: newStats,
         alive: newStats.health > 0 && newStats.hunger > 0 && newStats.cleanliness > 0 && newStats.energy > 0,
-        lastActionBy: userId,
+        lastActionBy: username,
         lastActionTime: Date.now()
       };
 
       await redis.set(`${PET_STATE_KEY}:${postId}`, JSON.stringify(sharedState));
 
-      // Log community action
+      // Log community action using hash instead of list
       const communityAction = {
         id: `${Date.now()}_${userId}`,
-        username: userId.substring(0, 8) + '...',
+        username: username,
         action,
-        message: `performed ${action} action`,
+        message: actionDescriptions[action] || 'performed an action',
         timestamp: Date.now()
       };
 
-      await redis.lpush(`${COMMUNITY_ACTIONS_KEY}:${postId}`, JSON.stringify(communityAction));
-      await redis.ltrim(`${COMMUNITY_ACTIONS_KEY}:${postId}`, 0, 49); // Keep last 50 actions
+      try {
+        // Store action with timestamp as key in hash
+        await redis.hset(
+          `${COMMUNITY_ACTIONS_KEY}:${postId}`, 
+          `action_${Date.now()}`, 
+          JSON.stringify(communityAction)
+        );
+
+        // Increment total actions counter
+        await redis.incr(`${COMMUNITY_ACTIONS_KEY}:${postId}:count`);
+      } catch (redisError) {
+        console.error('Redis action logging failed:', redisError);
+        // Continue without failing the action
+      }
 
       res.json({
         status: 'success',
@@ -143,10 +175,19 @@ router.post('/api/pet-state', async (req, res): Promise<void> => {
 
   try {
     const redis = getRedis();
+    
+    // Get username
+    let username = 'Anonymous';
+    try {
+      username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
+    } catch (error) {
+      console.error('Error getting username:', error);
+    }
+
     const sharedState = {
       stats,
       alive,
-      lastActionBy: userId,
+      lastActionBy: username,
       lastActionTime: Date.now()
     };
 
@@ -170,6 +211,14 @@ router.post('/api/pet-restart', async (req, res): Promise<void> => {
   try {
     const redis = getRedis();
     
+    // Get username
+    let username = 'Anonymous';
+    try {
+      username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
+    } catch (error) {
+      console.error('Error getting username:', error);
+    }
+    
     // Reset shared state
     const initialStats = {
       health: 100,
@@ -183,7 +232,7 @@ router.post('/api/pet-restart', async (req, res): Promise<void> => {
     const sharedState = {
       stats: initialStats,
       alive: true,
-      lastActionBy: userId,
+      lastActionBy: username,
       lastActionTime: Date.now()
     };
 
@@ -192,13 +241,22 @@ router.post('/api/pet-restart', async (req, res): Promise<void> => {
     // Log restart action
     const communityAction = {
       id: `${Date.now()}_${userId}`,
-      username: userId.substring(0, 8) + '...',
+      username: username,
       action: 'restart',
       message: 'restarted the community Snoo',
       timestamp: Date.now()
     };
 
-    await redis.lpush(`${COMMUNITY_ACTIONS_KEY}:${postId}`, JSON.stringify(communityAction));
+    try {
+      await redis.hset(
+        `${COMMUNITY_ACTIONS_KEY}:${postId}`, 
+        `action_${Date.now()}`, 
+        JSON.stringify(communityAction)
+      );
+      await redis.incr(`${COMMUNITY_ACTIONS_KEY}:${postId}:count`);
+    } catch (redisError) {
+      console.error('Redis restart logging failed:', redisError);
+    }
 
     res.json({ status: 'success' });
   } catch (error) {
@@ -218,10 +276,36 @@ router.get('/api/community-actions', async (req, res): Promise<void> => {
 
   try {
     const redis = getRedis();
-    const actionsData = await redis.lrange(`${COMMUNITY_ACTIONS_KEY}:${postId}`, 0, 9); // Get last 10 actions
     
-    const actions = actionsData.map(data => JSON.parse(data));
-    const totalActions = await redis.llen(`${COMMUNITY_ACTIONS_KEY}:${postId}`);
+    let actions = [];
+    let totalActions = 0;
+
+    try {
+      // Get actions from hash using hscan
+      const actionsData = await redis.hscan(`${COMMUNITY_ACTIONS_KEY}:${postId}`, 0);
+      
+      if (actionsData && actionsData.fieldValues) {
+        actions = actionsData.fieldValues
+          .map(fv => {
+            try {
+              return JSON.parse(fv.value);
+            } catch (parseError) {
+              console.error('Error parsing action data:', parseError);
+              return null;
+            }
+          })
+          .filter(action => action !== null)
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .slice(0, 10); // Get last 10 actions
+      }
+
+      // Get total actions count
+      const totalActionsStr = await redis.get(`${COMMUNITY_ACTIONS_KEY}:${postId}:count`);
+      totalActions = totalActionsStr ? parseInt(totalActionsStr, 10) : 0;
+    } catch (redisError) {
+      console.error('Redis community actions fetch failed:', redisError);
+      // Return empty data instead of failing
+    }
 
     res.json({
       status: 'success',
@@ -247,14 +331,32 @@ router.post<{}, RedditUpdateResponse, { action: string; message: string }>(
     }
 
     try {
-      // Store the update in Redis for potential future use
+      // Get username
+      let username = 'Anonymous';
+      try {
+        username = userId.length > 8 ? userId.substring(0, 8) + '...' : userId;
+      } catch (error) {
+        console.error('Error getting username:', error);
+      }
+
+      // Store the update in Redis for activity feed
       const redis = getRedis();
       const updateKey = `pet_update:${postId}:${userId}:${Date.now()}`;
-      await redis.set(updateKey, JSON.stringify({ action, message, timestamp: Date.now() }));
       
-      // In a real implementation, you would use the Reddit API here
-      // For now, we'll just acknowledge the update
-      console.log(`Reddit update for ${userId}: ${message}`);
+      try {
+        await redis.set(updateKey, JSON.stringify({ 
+          action, 
+          message, 
+          username,
+          timestamp: Date.now() 
+        }));
+      } catch (redisError) {
+        console.error('Redis update storage failed:', redisError);
+      }
+      
+      // Note: Actual Reddit comment posting would require Reddit API integration
+      // For now, we'll just log the action
+      console.log(`Reddit update for ${username}: ${message}`);
 
       res.json({ status: 'success' });
     } catch (error) {

@@ -24,7 +24,7 @@ export const StatsPanel: React.FC<StatsPanelProps> = ({ stats }) => {
       {statItems.map(({ key, label, value, iconType }) => (
         <div key={key} className="stat-item">
           <span className="stat-icon">
-            <PixelIcon type={iconType} size={12} />
+            <PixelIcon type={iconType} size={20} />
           </span>
           <span className="stat-text">{label}: {formatStatValue(value)}</span>
         </div>

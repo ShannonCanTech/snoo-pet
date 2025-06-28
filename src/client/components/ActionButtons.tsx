@@ -46,7 +46,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
                 onClick={() => handleActionClick(action)}
               >
                 <span className="action-icon">
-                  <PixelIcon type={iconType} size={20} />
+                  <PixelIcon type={iconType} size={32} />
                 </span>
                 <span>{label}</span>
               </div>
@@ -57,7 +57,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
               onClick={handleRestartClick}
             >
               <span className="action-icon">
-                <PixelIcon type="restart" size={20} />
+                <PixelIcon type="restart" size={32} />
               </span>
               <span>Restart</span>
             </div>
@@ -68,7 +68,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
             onClick={handleRestartClick}
           >
             <span className="action-icon">
-              <PixelIcon type="restart" size={20} />
+              <PixelIcon type="restart" size={32} />
             </span>
             <span>Restart</span>
           </div>

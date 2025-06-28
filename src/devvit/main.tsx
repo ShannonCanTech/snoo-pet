@@ -11,25 +11,35 @@ defineConfig({
   height: 'tall',
   menu: { enable: false },
   // Enable required features for multiplayer
-  redditAPI: true,
-  redis: true,
+  permissions: {
+    reddit: true,
+    redis: true,
+  }
 });
 
 export const BoltBadgeOverlay: Devvit.BlockComponent = () => (
-  <hstack alignment="end" padding="medium" width={'100%'} height={'30%'}>
+  <hstack 
+    alignment="end top" 
+    padding="small" 
+    width={'100%'} 
+    height={'20%'}
+    position="absolute"
+    top="0px"
+    right="0px"
+  >
     <image
       url="bolt-badge.png"
       resizeMode="fit"
       description="Built with Bolt.new badge"
-      imageHeight={80}
-      imageWidth={80}
+      imageHeight={60}
+      imageWidth={60}
       onPress={() => navigateTo('https://bolt.new')}
     />
   </hstack>
 );
 
 export const BoltGame: Devvit.BlockComponent = () => (
-  <zstack width={'100%'} height={'100%'} alignment="center middle">
+  <zstack width={'100%'} height={'100%'}>
     <webview url="index.html" />
     <BoltBadgeOverlay />
   </zstack>
@@ -42,7 +52,7 @@ export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Comm
         {/* Pixel art Snoo preview */}
         <vstack alignment="center middle" backgroundColor="#8b4513" cornerRadius="small" padding="medium">
           <text size="large" weight="bold" color="#f4e4bc">
-            🤖 COMMUNITY SNOO PET
+            COMMUNITY SNOO PET
           </text>
           <spacer size="small" />
           <text size="medium" color="#f4e4bc">

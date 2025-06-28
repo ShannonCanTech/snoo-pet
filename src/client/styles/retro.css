@@ -754,7 +754,7 @@
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px 12px;
+  gap: 8px 12px;
   font-family: 'Press Start 2P', monospace;
   font-size: 9px;
   color: #8b4513;
@@ -766,8 +766,8 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 2px 0;
-  gap: 6px;
+  padding: 4px 0;
+  gap: 8px;
 }
 
 .stat-item.age-stat {
@@ -780,12 +780,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
 }
 
 .stat-text {
   flex: 1;
+  font-size: 8px;
 }
 
 /* Action buttons container */
@@ -824,12 +826,12 @@
   font-family: 'Press Start 2P', monospace;
   font-size: 9px;
   color: #8b4513;
-  min-height: 50px;
+  min-height: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   image-rendering: pixelated;
   user-select: none;
 }
@@ -855,7 +857,7 @@
   background: #e6d4a8;
   border-color: #654321;
   font-size: 9px;
-  min-height: 50px;
+  min-height: 60px;
 }
 
 .action-item.restart-button:hover:not(.disabled) {
@@ -868,6 +870,7 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 4px;
+  image-rendering: pixelated;
 }
 
 /* Community Feed Styles */
@@ -1052,9 +1055,13 @@
   }
   
   .action-item {
-    min-height: 45px;
+    min-height: 50px;
     padding: 10px 6px;
     font-size: 8px;
+  }
+  
+  .action-icon {
+    margin-bottom: 2px;
   }
   
   .lcd-text {
@@ -1064,6 +1071,11 @@
   .stats-grid {
     font-size: 8px;
     gap: 4px 8px;
+  }
+  
+  .stat-icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -1083,8 +1095,13 @@
   }
   
   .action-item {
-    min-height: 40px;
+    min-height: 45px;
     padding: 8px 4px;
     font-size: 7px;
+  }
+  
+  .stat-icon {
+    width: 18px;
+    height: 18px;
   }
 }
