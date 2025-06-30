@@ -871,8 +871,6 @@
   justify-content: center;
   margin-bottom: 4px;
   image-rendering: pixelated;
-  width: 36px;
-  height: 36px;
 }
 
 /* Community Feed Styles */
@@ -981,6 +979,16 @@
   color: #8b4513;
 }
 
+/* Last action display */
+.last-action {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #654321;
+}
+
 /* Death screen overlay */
 .death-overlay {
   position: absolute;
@@ -1054,8 +1062,6 @@
   
   .action-icon {
     margin-bottom: 2px;
-    width: 30px;
-    height: 30px;
   }
   
   .lcd-text {
@@ -1092,11 +1098,6 @@
     min-height: 45px;
     padding: 8px 4px;
     font-size: 7px;
-  }
-  
-  .action-icon {
-    width: 24px;
-    height: 24px;
   }
   
   .stat-icon {
