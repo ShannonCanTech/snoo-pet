@@ -77,7 +77,6 @@ export const Game: React.FC = () => {
   const [disabled, setDisabled] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [birthTime] = useState(Date.now());
-  const [lastActionBy, setLastActionBy] = useState<string>('');
 
   useEffect(() => {
     const hostname = window.location.hostname;
@@ -95,9 +94,6 @@ export const Game: React.FC = () => {
             setStats(data.stats);
             updatePetState(data.stats);
             setAlive(data.alive !== false);
-            if (data.lastActionBy) {
-              setLastActionBy(data.lastActionBy);
-            }
           }
         }
       } catch (error) {
@@ -222,7 +218,6 @@ export const Game: React.FC = () => {
       setAlive(true);
       setActionCount(0);
       setMessage('');
-      setLastActionBy('');
       showMessage('COMMUNITY SNOO REBORN!');
       
       await sendRedditUpdate('restart', 'restarted the community Snoo! A new life begins! 🔄');
@@ -333,13 +328,6 @@ export const Game: React.FC = () => {
             <div className="age-display lcd-text">
               {Math.round(stats.age)}MIN
             </div>
-
-            {/* Last Action Display */}
-            {lastActionBy && (
-              <div className="last-action lcd-text">
-                Last action by: {lastActionBy}
-              </div>
-            )}
 
             {/* Death Overlay */}
             {!alive && (
