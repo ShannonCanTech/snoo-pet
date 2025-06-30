@@ -335,11 +335,11 @@ export const Game: React.FC = () => {
             </div>
 
             {/* Last Action Display */}
-            {lastActionBy && (
+            {/* {lastActionBy && (
               <div className="last-action lcd-text">
                 Last action by: {lastActionBy}
               </div>
-            )}
+            )} */}
 
             {/* Death Overlay */}
             {!alive && (
