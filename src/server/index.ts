@@ -26,6 +26,18 @@ const actionDescriptions = {
   death: 'witnessed the community Snoo pass away'
 };
 
+// Helper function to clean corrupted Redis data
+async function cleanCorruptedActions(redis: any, postId: string) {
+  try {
+    console.log(`Cleaning corrupted actions for post ${postId}`);
+    await redis.del(`${COMMUNITY_ACTIONS_KEY}:${postId}`);
+    await redis.del(`${COMMUNITY_ACTIONS_KEY}:${postId}:count`);
+    console.log(`Cleaned corrupted actions for post ${postId}`);
+  } catch (error) {
+    console.error('Error cleaning corrupted actions:', error);
+  }
+}
+
 // Pet action endpoint
 router.post<{}, PetActionResponse, { action: ActionType; currentStats: PetStats }>(
   '/api/pet-action',
@@ -279,22 +291,49 @@ router.get('/api/community-actions', async (req, res): Promise<void> => {
     
     let actions = [];
     let totalActions = 0;
+    let hasCorruptedData = false;
 
     try {
       // Get actions from hash using hscan
       const actionsData = await redis.hscan(`${COMMUNITY_ACTIONS_KEY}:${postId}`, 0);
       
       if (actionsData && actionsData.fieldValues) {
-        actions = actionsData.fieldValues
-          .map(fv => {
-            try {
-              return JSON.parse(fv.value);
-            } catch (parseError) {
-              console.error('Error parsing action data:', parseError);
-              return null;
+        const validActions = [];
+        
+        for (const fv of actionsData.fieldValues) {
+          try {
+            // Check if the value looks like valid JSON before parsing
+            if (!fv.value || typeof fv.value !== 'string' || fv.value.trim().length === 0) {
+              console.warn('Skipping empty or invalid action value:', fv.value);
+              hasCorruptedData = true;
+              continue;
             }
-          })
-          .filter(action => action !== null)
+            
+            // Additional check for values that start with underscore or other invalid characters
+            if (fv.value.startsWith('_') || !fv.value.startsWith('{')) {
+              console.warn('Skipping malformed action value:', fv.value.substring(0, 50));
+              hasCorruptedData = true;
+              continue;
+            }
+            
+            const action = JSON.parse(fv.value);
+            
+            // Validate that the parsed action has required fields
+            if (action && typeof action === 'object' && action.timestamp && action.username) {
+              validActions.push(action);
+            } else {
+              console.warn('Skipping action with missing required fields:', action);
+              hasCorruptedData = true;
+            }
+          } catch (parseError) {
+            console.error('Error parsing action data:', parseError);
+            console.error('Problematic value:', fv.value?.substring(0, 100));
+            hasCorruptedData = true;
+            continue;
+          }
+        }
+        
+        actions = validActions
           .sort((a, b) => b.timestamp - a.timestamp)
           .slice(0, 10); // Get last 10 actions
       }
@@ -302,8 +341,24 @@ router.get('/api/community-actions', async (req, res): Promise<void> => {
       // Get total actions count
       const totalActionsStr = await redis.get(`${COMMUNITY_ACTIONS_KEY}:${postId}:count`);
       totalActions = totalActionsStr ? parseInt(totalActionsStr, 10) : 0;
+      
+      // If we found corrupted data, clean it up
+      if (hasCorruptedData) {
+        console.warn('Corrupted data detected, cleaning up...');
+        await cleanCorruptedActions(redis, postId);
+        // Reset total actions count to match valid actions
+        totalActions = actions.length;
+        if (totalActions > 0) {
+          await redis.set(`${COMMUNITY_ACTIONS_KEY}:${postId}:count`, totalActions.toString());
+        }
+      }
+      
     } catch (redisError) {
       console.error('Redis community actions fetch failed:', redisError);
+      // If there's a Redis error, try to clean up corrupted data
+      if (redisError.message && redisError.message.includes('JSON')) {
+        await cleanCorruptedActions(redis, postId);
+      }
       // Return empty data instead of failing
     }
 
