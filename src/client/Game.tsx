@@ -316,15 +316,15 @@ export const Game: React.FC = () => {
               </div>
             )}
 
-            {/* Message Display */}
-            {message && (
+            {/* Message Display - COMMENTED OUT */}
+            {/* {message && (
               <div className="lcd-message lcd-text">
                 {message}
               </div>
-            )}
+            )} */}
 
             {/* Pet Display */}
-            <SnooSprite state={petState} currentAction={currentAction} />
+            <SnooSprite state={petState} currentAction={currentAction} message={message} />
 
             {/* Stats Panel */}
             <StatsPanel stats={stats} />

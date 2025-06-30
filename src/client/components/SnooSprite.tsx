@@ -5,12 +5,14 @@ interface SnooSpriteProps {
   state: PetState;
   className?: string;
   currentAction?: string;
+  message?: string;
 }
 
 export const SnooSprite: React.FC<SnooSpriteProps> = ({ 
   state, 
   className = '', 
-  currentAction 
+  currentAction,
+  message 
 }) => {
   const [animationState, setAnimationState] = useState<string>('idle');
   const [showAnimation, setShowAnimation] = useState(false);
@@ -253,6 +255,12 @@ export const SnooSprite: React.FC<SnooSpriteProps> = ({
       <div className="pixel-text pet-state-text">
         SNOO - {getStateText()}
       </div>
+      {/* Action message display below pet state text */}
+      {message && (
+        <div className="pixel-text snoo-message-display">
+          {message}
+        </div>
+      )}
     </div>
   );
 };

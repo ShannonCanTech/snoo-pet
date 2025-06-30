@@ -103,6 +103,20 @@
   font-size: 10px;
 }
 
+/* Snoo message display - NEW STYLE */
+.snoo-message-display {
+  margin-top: 8px;
+  background: rgba(244, 228, 188, 0.95);
+  border: 2px solid #8b4513;
+  padding: 6px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  text-align: center;
+  color: #8b4513;
+  max-width: 200px;
+  border-radius: 0;
+}
+
 /* Pixel art Snoo container */
 .pixel-snoo-container {
   width: 120px;
@@ -933,7 +947,7 @@
 }
 
 /* Message displays */
-.lcd-message {
+/* .lcd-message {
   position: absolute;
   top: 8px;
   left: 8px;
@@ -946,7 +960,7 @@
   text-align: center;
   color: #8b4513;
   z-index: 10;
-}
+} */
 
 .urgency-message {
   position: absolute;
