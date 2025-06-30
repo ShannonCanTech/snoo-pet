@@ -980,14 +980,14 @@
 }
 
 /* Last action display */
-.last-action {
+/* .last-action {
   position: absolute;
   bottom: 8px;
   left: 8px;
   font-family: 'Press Start 2P', monospace;
   font-size: 7px;
   color: #654321;
-}
+} */
 
 /* Death screen overlay */
 .death-overlay {
